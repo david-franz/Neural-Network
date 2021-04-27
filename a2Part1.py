@@ -15,7 +15,7 @@ def encode_labels(labels):
     integer_encoded = integer_encoded.reshape(len(integer_encoded), 1)
 
     # encode 1 as [1, 0, 0], 2 as [0, 1, 0], and 3 as [0, 0, 1] (to fit with our network outputs!)
-    onehot_encoder = OneHotEncoder(sparse=False)
+    onehot_encoder = OneHotEncoder(categories='auto', sparse=False) # added "categories='auto'", try removing later
     onehot_encoded = onehot_encoder.fit_transform(integer_encoded)
 
     return label_encoder, integer_encoded, onehot_encoder, onehot_encoded
@@ -60,6 +60,15 @@ if __name__ == '__main__':
 
     # TODO: Perform a single backpropagation pass using the first instance only. (In other words, train with 1
     #  instance for 1 epoch!). Hint: you will need to first get the weights from a forward pass.
+
+    # new code
+    print("------")
+    hidden_layer_outputs, output_layer_outputs = nn.forward_pass(instances[0])
+    print(hidden_layer_outputs)
+    print(output_layer_outputs)
+    # backward_propagate_error(instances[0], hidden_layer_outputs, output_layer_outputs, labels[0]) # might be to convert into [1,0,0] form
+    print("------")
+    # \new code
 
     print('Weights after performing BP for first instance only:')
     print('Hidden layer weights:\n', nn.hidden_layer_weights)

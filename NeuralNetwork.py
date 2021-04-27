@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class Neural_Network:
     # Initialize the network
     def __init__(self, num_inputs, num_hidden, num_outputs, hidden_layer_weights, output_layer_weights, learning_rate):
@@ -15,23 +14,28 @@ class Neural_Network:
 
     # Calculate neuron activation for an input
     def sigmoid(self, input):
-        output = np.NaN  # TODO!
-        return output
+        return (1 / (1 + np.exp(-input)))
 
     # Feed forward pass input to a network output
     def forward_pass(self, inputs):
-        hidden_layer_outputs = []
+        hidden_layer_outputs = [] # should be size 2
         for i in range(self.num_hidden):
             # TODO! Calculate the weighted sum, and then compute the final output.
-            weighted_sum = 0.
-            output = 0.
+            weighted_sum = 0
+            print("inputs[0]={}".format(inputs[0]))
+            print("self.hidden_layer_weights[0]={}".format(self.hidden_layer_weights[0]))
+            for j in range(self.num_inputs):
+                weighted_sum += inputs[j] * self.hidden_layer_weights[i]
+            print("weighted sum={}".format(weighted_sum))
+            output = self.sigmoid(weighted_sum)
+            print("output={}".format(output))
             hidden_layer_outputs.append(output)
 
-        output_layer_outputs = []
+        output_layer_outputs = [] # should be size 3- we use this for classifying
         for i in range(self.num_outputs):
             # TODO! Calculate the weighted sum, and then compute the final output.
             weighted_sum = 0.
-            output = 0.
+            output = 0. # self.sigmoid(weighted_sum)
             output_layer_outputs.append(output)
 
         return hidden_layer_outputs, output_layer_outputs
