@@ -64,9 +64,10 @@ if __name__ == '__main__':
     # new code
     print("------")
     hidden_layer_outputs, output_layer_outputs = nn.forward_pass(instances[0])
+    print(instances[0])
     print(hidden_layer_outputs)
     print(output_layer_outputs)
-    # backward_propagate_error(instances[0], hidden_layer_outputs, output_layer_outputs, labels[0]) # might be to convert into [1,0,0] form
+    nn.backward_propagate_error(instances[0], hidden_layer_outputs, output_layer_outputs, integer_encoded[0]) # might be to convert into [1,0,0] form
     print("------")
     # \new code
 

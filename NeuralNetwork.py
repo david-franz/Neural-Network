@@ -20,22 +20,18 @@ class Neural_Network:
     def forward_pass(self, inputs):
         hidden_layer_outputs = [] # should be size 2
         for i in range(self.num_hidden):
-            # TODO! Calculate the weighted sum, and then compute the final output.
             weighted_sum = 0
-            print("inputs[0]={}".format(inputs[0]))
-            print("self.hidden_layer_weights[0]={}".format(self.hidden_layer_weights[0]))
             for j in range(self.num_inputs):
-                weighted_sum += inputs[j] * self.hidden_layer_weights[i]
-            print("weighted sum={}".format(weighted_sum))
+                weighted_sum += inputs[j] * self.hidden_layer_weights[j][i]
             output = self.sigmoid(weighted_sum)
-            print("output={}".format(output))
             hidden_layer_outputs.append(output)
 
-        output_layer_outputs = [] # should be size 3- we use this for classifying
+        output_layer_outputs = []
         for i in range(self.num_outputs):
-            # TODO! Calculate the weighted sum, and then compute the final output.
-            weighted_sum = 0.
-            output = 0. # self.sigmoid(weighted_sum)
+            weighted_sum = 0
+            for j in range(self.num_hidden):
+                weighted_sum += hidden_layer_outputs[j] * self.output_layer_weights[j][i]
+            output = self.sigmoid(weighted_sum)
             output_layer_outputs.append(output)
 
         return hidden_layer_outputs, output_layer_outputs
@@ -44,11 +40,24 @@ class Neural_Network:
     def backward_propagate_error(self, inputs, hidden_layer_outputs, output_layer_outputs, desired_outputs):
 
         output_layer_betas = np.zeros(self.num_outputs)
-        # TODO! Calculate output layer betas.
+        
+        for i in range(len(output_layer_outputs)):
+            if i == desired_outputs[0]:
+                output_layer_betas[i] = 1 - output_layer_outputs[i]
+            else:
+                output_layer_betas[i] = 0 - output_layer_outputs[i]
+        
         print('OL betas: ', output_layer_betas)
+
 
         hidden_layer_betas = np.zeros(self.num_hidden)
         # TODO! Calculate hidden layer betas.
+        for i in range(self.num_hidden):
+            beta = 0.
+            for j in range(self.num_outputs-1):
+                beta += (self.output_layer_weights[j][i] * output_layer_outputs[j] * (1 - output_layer_outputs[j]) * output_layer_betas[j])
+            hidden_layer_betas[i] = beta
+
         print('HL betas: ', hidden_layer_betas)
 
         # This is a HxO array (H hidden nodes, O outputs)
@@ -93,7 +102,12 @@ class Neural_Network:
         predictions = []
         for instance in instances:
             hidden_layer_outputs, output_layer_outputs = self.forward_pass(instance)
-            #print(output_layer_outputs)
-            predicted_class = None  # TODO! Should be 0, 1, or 2.
+            
+            max_prediction = max(output_layer_outputs[0], max(output_layer_outputs[1], output_layer_outputs[2]))
+            predicted_class = None
+            for index in range(len(output_layer_outputs)):
+                if output_layer_outputs[index] == max_prediction:
+                    predicted_class = index
+                    break
             predictions.append(predicted_class)
         return predictions
