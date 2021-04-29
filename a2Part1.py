@@ -61,20 +61,17 @@ if __name__ == '__main__':
     # TODO: Perform a single backpropagation pass using the first instance only. (In other words, train with 1
     #  instance for 1 epoch!). Hint: you will need to first get the weights from a forward pass.
 
-    # new code
-    print("------")
     hidden_layer_outputs, output_layer_outputs = nn.forward_pass(instances[0])
-    print("instances[0] = {}".format(instances[0]))
-    print("hidden_layer_outputs = {}".format(hidden_layer_outputs))
-    print("output_layer_outputs = {}".format(output_layer_outputs))
-    delta_output_layer_weights, delta_hidden_layer_weights = nn.backward_propagate_error(instances[0], hidden_layer_outputs, output_layer_outputs, integer_encoded[0]) # might be to convert into [1,0,0] form
+    
+    delta_output_layer_weights, delta_hidden_layer_weights = nn.backward_propagate_error(instances[0], hidden_layer_outputs, output_layer_outputs, integer_encoded[0])
+    
     nn.update_weights(delta_output_layer_weights, delta_hidden_layer_weights)
-    print("------")
-    # \new code
 
     print('Weights after performing BP for first instance only:')
     print('Hidden layer weights:\n', nn.hidden_layer_weights)
     print('Output layer weights:\n', nn.output_layer_weights)
+
+    nn.train(instances, integer_encoded, 100)
 
     # TODO: Train for 100 epochs, on all instances.
     print('\nAfter training:')
@@ -83,8 +80,17 @@ if __name__ == '__main__':
 
     pd_data_ts = pd.read_csv('penguins307-test.csv')
     test_labels = pd_data_ts.iloc[:, -1]
+    integer_encoded_test_labels = label_encoder.fit_transform(test_labels)
     test_instances = pd_data_ts.iloc[:, :-1]
     #scale the test according to our training data.
     test_instances = scaler.transform(test_instances)
 
     # TODO: Compute and print the test accuracy
+    predictions = nn.predict(test_instances)
+    num_correct_predictions = 0
+    for i in range(len(predictions)):
+        if integer_encoded_test_labels[i] == predictions[i]:
+            num_correct_predictions += 1
+
+    acc = num_correct_predictions / len(predictions)
+    print('acc = ', acc)
