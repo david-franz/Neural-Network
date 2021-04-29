@@ -8,7 +8,7 @@ from NeuralNetwork import Neural_Network
 
 
 def encode_labels(labels):
-    # encode 'Adelie' as 1, 'Chinstrap' as 2, 'Gentoo' as 3
+    # encode 'Adelie' as [0], 'Chinstrap' as [1], 'Gentoo' as [2]
     label_encoder = LabelEncoder()
     integer_encoded = label_encoder.fit_transform(labels)
     # don't worry about this
@@ -62,6 +62,8 @@ if __name__ == '__main__':
     #  instance for 1 epoch!). Hint: you will need to first get the weights from a forward pass.
 
     hidden_layer_outputs, output_layer_outputs = nn.forward_pass(instances[0])
+
+    print("output_layer_outputs = {}\n".format(output_layer_outputs))
     
     delta_output_layer_weights, delta_hidden_layer_weights = nn.backward_propagate_error(instances[0], hidden_layer_outputs, output_layer_outputs, integer_encoded[0])
     
