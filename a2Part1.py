@@ -64,10 +64,11 @@ if __name__ == '__main__':
     # new code
     print("------")
     hidden_layer_outputs, output_layer_outputs = nn.forward_pass(instances[0])
-    print(instances[0])
-    print(hidden_layer_outputs)
-    print(output_layer_outputs)
-    nn.backward_propagate_error(instances[0], hidden_layer_outputs, output_layer_outputs, integer_encoded[0]) # might be to convert into [1,0,0] form
+    print("instances[0] = {}".format(instances[0]))
+    print("hidden_layer_outputs = {}".format(hidden_layer_outputs))
+    print("output_layer_outputs = {}".format(output_layer_outputs))
+    delta_output_layer_weights, delta_hidden_layer_weights = nn.backward_propagate_error(instances[0], hidden_layer_outputs, output_layer_outputs, integer_encoded[0]) # might be to convert into [1,0,0] form
+    nn.update_weights(delta_output_layer_weights, delta_hidden_layer_weights)
     print("------")
     # \new code
 

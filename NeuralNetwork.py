@@ -21,16 +21,20 @@ class Neural_Network:
         hidden_layer_outputs = [] # should be size 2
         for i in range(self.num_hidden):
             weighted_sum = 0
+            
             for j in range(self.num_inputs):
                 weighted_sum += inputs[j] * self.hidden_layer_weights[j][i]
+            
             output = self.sigmoid(weighted_sum)
             hidden_layer_outputs.append(output)
 
         output_layer_outputs = []
         for i in range(self.num_outputs):
             weighted_sum = 0
+            
             for j in range(self.num_hidden):
                 weighted_sum += hidden_layer_outputs[j] * self.output_layer_weights[j][i]
+            
             output = self.sigmoid(weighted_sum)
             output_layer_outputs.append(output)
 
@@ -40,39 +44,49 @@ class Neural_Network:
     def backward_propagate_error(self, inputs, hidden_layer_outputs, output_layer_outputs, desired_outputs):
 
         output_layer_betas = np.zeros(self.num_outputs)
-        
         for i in range(len(output_layer_outputs)):
             if i == desired_outputs[0]:
                 output_layer_betas[i] = 1 - output_layer_outputs[i]
             else:
                 output_layer_betas[i] = 0 - output_layer_outputs[i]
-        
         print('OL betas: ', output_layer_betas)
 
 
         hidden_layer_betas = np.zeros(self.num_hidden)
-        # TODO! Calculate hidden layer betas.
         for i in range(self.num_hidden):
             beta = 0.
-            for j in range(self.num_outputs-1):
+            for j in range(self.num_outputs-1): # check I need the -1
                 beta += (self.output_layer_weights[j][i] * output_layer_outputs[j] * (1 - output_layer_outputs[j]) * output_layer_betas[j])
             hidden_layer_betas[i] = beta
-
         print('HL betas: ', hidden_layer_betas)
 
         # This is a HxO array (H hidden nodes, O outputs)
         delta_output_layer_weights = np.zeros((self.num_hidden, self.num_outputs))
-        # TODO! Calculate output layer weight changes.
+        for i in range(self.num_hidden):
+            for j in range(self.num_outputs):
+                delta_output_layer_weights[i][j] = self.learning_rate * hidden_layer_outputs[i] * output_layer_outputs[j] * (1 - output_layer_outputs[j]) * output_layer_betas[j]
+        print(delta_output_layer_weights)
 
         # This is a IxH array (I inputs, H hidden nodes)
         delta_hidden_layer_weights = np.zeros((self.num_inputs, self.num_hidden))
-        # TODO! Calculate hidden layer weight changes.
+        for i in range(self.num_inputs):
+            for j in range(self.num_hidden):
+                delta_hidden_layer_weights[i][j] = self.learning_rate * inputs[i] * hidden_layer_outputs[j] * (1 - hidden_layer_outputs[j]) * hidden_layer_betas[j]
+        print(delta_hidden_layer_weights)
 
         # Return the weights we calculated, so they can be used to update all the weights.
         return delta_output_layer_weights, delta_hidden_layer_weights
 
     def update_weights(self, delta_output_layer_weights, delta_hidden_layer_weights):
         # TODO! Update the weights.
+        for i in range(self.num_hidden):
+            for j in range(self.num_outputs):
+                self.output_layer_weights[i][j] += delta_output_layer_weights[i][j]
+
+        for i in range(self.num_inputs):
+            for j in range(self.num_hidden):
+                self.hidden_layer_weights[i][j] += delta_hidden_layer_weights[i][j]
+
         print('Placeholder')
 
     def train(self, instances, desired_outputs, epochs):
