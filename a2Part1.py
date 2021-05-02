@@ -60,7 +60,6 @@ if __name__ == '__main__':
 
     # TODO: Perform a single backpropagation pass using the first instance only. (In other words, train with 1
     #  instance for 1 epoch!). Hint: you will need to first get the weights from a forward pass.
-
     hidden_layer_outputs, output_layer_outputs = nn.forward_pass(instances[0])
 
     print("output_layer_outputs = {}\n".format(output_layer_outputs))
@@ -73,9 +72,9 @@ if __name__ == '__main__':
     print('Hidden layer weights:\n', nn.hidden_layer_weights)
     print('Output layer weights:\n', nn.output_layer_weights)
 
+    # TODO: Train for 100 epochs, on all instances.
     nn.train(instances, integer_encoded, 100)
 
-    # TODO: Train for 100 epochs, on all instances.
     print('\nAfter training:')
     print('Hidden layer weights:\n', nn.hidden_layer_weights)
     print('Output layer weights:\n', nn.output_layer_weights)

@@ -96,7 +96,6 @@ class Neural_Network:
                 delta_output_layer_weights, delta_hidden_layer_weights, = self.backward_propagate_error(
                     instance, hidden_layer_outputs, output_layer_outputs, desired_outputs[i])
             
-                # TODO
                 max_prediction = max(output_layer_outputs[0], max(output_layer_outputs[1], output_layer_outputs[2]))
                 predicted_class = None
                 for index in range(len(output_layer_outputs)):
@@ -113,7 +112,6 @@ class Neural_Network:
             # print('Hidden layer weights \n', self.hidden_layer_weights)
             # print('Output layer weights  \n', self.output_layer_weights)
 
-            # TODO: Print accuracy achieved over this epoch
             assert len(predictions) == len(desired_outputs)
             num_correct_predictions = 0
             for i in range(len(predictions)):
